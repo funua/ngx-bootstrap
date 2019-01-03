@@ -168,7 +168,8 @@ export class TooltipDirective implements OnInit, OnDestroy {
   public ngOnInit(): void {
     this._tooltip.listen({
       triggers: this.triggers,
-      show: () => this.show()
+      show: () => this.show(),
+      hide: () => this.hide()
     });
     this.tooltipChange.subscribe((value: any) => {
       if (!value) {
@@ -229,7 +230,15 @@ export class TooltipDirective implements OnInit, OnDestroy {
     }
 
     this._tooltip.instance.classMap.in = false;
-    setTimeout(() => {
+    var interval = setInterval(() => {
+      var elements = document.querySelectorAll( ":hover" );
+            if (elements && elements.length) {
+              var el = elements[elements.length-1];
+              if (el.className == 'tooltip-inner') {
+                return;
+              }
+            }
+      clearInterval(interval);
       this._tooltip.hide();
     }, this._fadeDuration);
   }
